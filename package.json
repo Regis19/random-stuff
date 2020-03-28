@@ -1,5 +1,5 @@
 {
-  "name": "backend",
+  "name": "random-stuff",
   "version": "1.0.0",
   "description": "Simple GraphQl Server",
   "main": "index.js",
