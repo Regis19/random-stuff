@@ -14,7 +14,7 @@ const typeDefs = gql`
   }
 `;
 
-let counter = 1;
+let counter = 0;
 const counterIncrement = () => ++counter;
 
 const rootValue = () => {
@@ -41,7 +41,7 @@ const rootValue = () => {
 const counterIncrementPlugin = {
   requestDidStart(requestContext) {
     return {
-      willSendResponse() {
+      executionDidStart() {
         if (requestContext.operationName !== "IntrospectionQuery") {
           counterIncrement();
         }
