@@ -10,11 +10,15 @@ const typeDefs = gql`
     email: String
     pets: [String]
     randomDiceThrow: Int
+    counter: Int
   }
 `;
 
+let counter = 1;
+const counterIncrement = () => ++counter;
+
 const rootValue = () => {
-  const getRandmDicteThrow = sides => Math.ceil(Math.random() * sides);
+  const getRandmDicteThrow = (sides) => Math.ceil(Math.random() * sides);
 
   const data = {
     greeting: "Hello world",
@@ -22,22 +26,36 @@ const rootValue = () => {
       "https://kursreacta.pl",
       "https://64bites.com",
       "https://www.hltv.org/",
-      "https://liquipedia.net/counterstrike/S-Tier_Tournaments"
+      "https://liquipedia.net/counterstrike/S-Tier_Tournaments",
     ],
     firstName: "John",
     email: "john@example.com",
     pets: ["Mittens", "Doggo", "Birb"],
-    randomDiceThrow: getRandmDicteThrow(6)
+    randomDiceThrow: getRandmDicteThrow(6),
+    counter,
   };
 
   return data;
+};
+
+const counterIncrementPlugin = {
+  requestDidStart(requestContext) {
+    return {
+      willSendResponse() {
+        if (requestContext.operationName !== "IntrospectionQuery") {
+          counterIncrement();
+        }
+      },
+    };
+  },
 };
 
 const server = new ApolloServer({
   typeDefs,
   rootValue,
   playground: true,
-  introspection: true
+  introspection: true,
+  plugins: [counterIncrementPlugin],
 });
 
-server.listen({ port: PORT }).then(result => console.log(result.url));
+server.listen({ port: PORT }).then((result) => console.log(result.url));
