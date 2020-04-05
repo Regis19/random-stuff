@@ -11,6 +11,9 @@ const typeDefs = gql`
     pets: [String]
     randomDiceThrow: Int
     counter: Int
+    pi: Float
+    isTodayFriday: Boolean
+    randomCoinTossesUntilTrue: [Boolean]
   }
 `;
 
@@ -19,6 +22,16 @@ const counterIncrement = () => ++counter;
 
 const rootValue = () => {
   const getRandmDicteThrow = (sides) => Math.ceil(Math.random() * sides);
+  const today = new Date();
+  const randomCoinTosses = () => Math.random() > 0.5;
+  const getRandomCoinTossesUntilTrue = () => {
+    const result = [];
+    do {
+      result.push(randomCoinTosses());
+    } while (!result[result.length - 1]);
+
+    return result;
+  };
 
   const data = {
     greeting: "Hello world",
@@ -33,6 +46,9 @@ const rootValue = () => {
     pets: ["Mittens", "Doggo", "Birb"],
     randomDiceThrow: getRandmDicteThrow(6),
     counter,
+    pi: Math.PI,
+    isTodayFriday: today.getDay() === 5,
+    randomCoinTossesUntilTrue: getRandomCoinTossesUntilTrue(),
   };
 
   return data;
